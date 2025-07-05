@@ -160,7 +160,7 @@ footer {
 .upgrades,
 .reviews {
   flex: 1;
-  max-width: 50%;
+  max-width: 45%;
 }
 
 .upgrades h3,
