@@ -1,6 +1,343 @@
-/******* Change Box Model ***************/
+/******* Reset + Box Model ***************/
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  background-image: url("/images/site/small_check.jpg");
+  background-size: cover;
+  margin: 0;
+  padding: 2rem;
+}
+
+#wrapper {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+  background-color: white;
+  border: 4px solid #00aaff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+/******* Header ***************/
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.siteName a {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000000;
+  text-decoration: none;
+}
+
+#tools a {
+  font-size: 1.2rem;
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  top: -30px;
+}
+
+/******* Navigation ***************/
+nav ul {
+  background-color: #333;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  width: 100%;
+}
+
+nav li {
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/******* Main Content ***************/
+main {
+  padding: 1rem 0;
+}
+
+/******* Footer ***************/
+footer {
+  text-align: left;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.copyright {
+  color: #333;
+}
+
+/******* Delorean Showcase ***************/
+.delorean-showcase {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  flex-direction: column;
+  text-align: center;
+}
+
+.delorean-img img {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/******* Delorean Info - transparent box ***************/
+.delorean-info {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.60);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  max-width: 300px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.delorean-info h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #0077cc;
+}
+
+.delorean-info ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+}
+
+.delorean-info li {
+  margin-bottom: 0.3rem;
+  font-size: 1.5rem;
+  color: #0077cc;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.delorean-info img {
+  width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/******* Upgrades & Reviews ***************/
+.delorean-lists {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.upgrades,
+.reviews {
+  flex: 1;
+  max-width: 50%;
+}
+
+.upgrades h3,
+.reviews h3 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.upgrades ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.upgrades li {
+  text-align: center;
+  text-decoration: underline;
+  color: #005b9c;
+}
+
+.upgrade-box {
+  background-color: #0095ff;
+  border: 1px solid black;
+  width: 200px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.5rem;
+}
+
+.upgrade-box img {
+  width: 60px;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.reviews ul {
+  padding: 0;
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 2;
+}
+
+.reviews li {
+  margin-bottom: 1rem;
+}
+
+/******* Media Queries ***************/
+
+/* Tablets (desktop layout) */
+@media (min-width: 768px) {
+  .delorean-showcase {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .delorean-info {
+    flex: 1;
+    text-align: left;
+    align-self: center;
+  }
+
+  .delorean-img {
+    flex: 1;
+  }
+
+  .delorean-img img {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Dispositivos medianos */
+@media (max-width: 950px) {
+  .delorean-lists {
+    flex-direction: column;
+  }
+
+  .upgrades,
+  .reviews {
+    max-width: 100%;
+  }
+
+  .upgrades h3,
+  .reviews h3 {
+    font-size: 1.2rem;
+    text-align: left;
+  }
+
+  .reviews ul {
+    font-size: 1rem;
+    padding-left: 1rem;
+  }
+
+  .upgrade-box {
+    width: 170px;
+    height: 100px;
+  }
+
+  .upgrades li {
+    font-size: 15px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .siteName a {
+    font-size: 1.5rem;
+  }
+
+  body {
+    font-size: 10px;
+    text-align: left;
+    padding: 1rem;
+  }
+
+  .delorean-showcase {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
+  .delorean-info {
+    max-width: 50%;
+    text-align: left;
+  }
+
+  .delorean-info ul {
+    margin-bottom: 1rem;
+  }
+
+  .delorean-info h2 {
+    font-size: 1.2rem;
+  }
+
+  .delorean-info li {
+    font-size: 1rem;
+  }
+
+  .delorean-info img {
+    width: 100px;
+  }
+
+  .delorean-lists {
+    flex-direction: column;
+  }
+
+  .upgrades,
+  .reviews {
+    max-width: 100%;
+  }
+
+  .upgrades h3,
+  .reviews h3 {
+    font-size: 1.2rem;
+    text-align: left;
+  }
+
+  .reviews ul {
+    font-size: 1rem;
+    padding-left: 1rem;
+  }
+
+  .upgrade-box {
+    width: 170px;
+    height: 100px;
+  }
+
+  .upgrades li {
+    font-size: 15px;
+  }
+
+  #wrapper {
+    padding: 1rem;
+  }
 }
