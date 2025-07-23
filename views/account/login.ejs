@@ -1,0 +1,31 @@
+<%- include("../partials/head") %>
+
+<main>
+  <h1><%= title %></h1>
+
+  <!-- Flash Messages -->
+    <% let flashMessages = messages('notice') || [] %>
+    <% if (flashMessages.length > 0) { %>
+        <ul class="flash-messages">
+            <% flashMessages.forEach(function(message) { %>
+                <li><%= message %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+  <!-- Login Form -->
+  <form action="/account/login" method="post" class="form-card">
+    <label for="account_email">Email</label>
+    <input type="email" id="account_email" name="account_email" required>
+
+    <label for="account_password">Password</label>
+    <input type="password" id="account_password" name="account_password" required
+      pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- Link to Register -->
+  <p>Don't have an account? 
+    <a href="/account/register">Register here</a>.
+  </p>
+</main>
