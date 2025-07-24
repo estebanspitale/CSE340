@@ -13,10 +13,26 @@
         </ul>
     <% } %>
 
+    <!-- Validation Errors -->
+<% if (errors && errors.errors && errors.errors.length > 0) { %>
+  <div class="errors">
+    <ul>
+      <% errors.errors.forEach(function(error) { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
   <!-- Login Form -->
   <form action="/account/login" method="post" class="form-card">
     <label for="account_email">Email</label>
-    <input type="email" id="account_email" name="account_email" required>
+    <input 
+  type="email" 
+  id="account_email" 
+  name="account_email" 
+  required
+  value="<%= typeof account_email != 'undefined' ? account_email : '' %>">
 
     <label for="account_password">Password</label>
     <input type="password" id="account_password" name="account_password" required
