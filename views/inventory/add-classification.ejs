@@ -1,0 +1,39 @@
+<%- include("../partials/head") %>
+
+<main>
+  <h1>Add New Classification</h1>
+
+  <!-- Flash Messages -->
+  <% if (messages.notice) { %>
+    <ul class="flash-messages">
+      <% messages.notice.forEach(function(msg){ %>
+        <li><%= msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <!-- Validation Errors -->
+  <% if (errors && errors.errors && errors.errors.length > 0) { %>
+    <div class="errors">
+      <ul>
+        <% errors.errors.forEach(function(error) { %>
+          <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form id="addClassificationForm" action="/inv/classification/add" method="post">
+    <label for="classification_name">Classification Name</label>
+    <input 
+      type="text" 
+      id="classification_name" 
+      name="classification_name" 
+      pattern="^[A-Za-z0-9]+$" 
+      title="No spaces or special characters allowed" 
+      required
+      value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>"
+    >
+    <button type="submit">Add Classification</button>
+  </form>
+</main>

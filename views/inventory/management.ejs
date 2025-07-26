@@ -1,0 +1,17 @@
+<main class="inventory-management">
+  <h1>Inventory Management</h1>
+
+  <!-- Flash Messages -->
+  <% if (messages.notice) { %>
+    <ul class="flash-messages">
+      <% messages.notice.forEach(function(msg){ %>
+        <li><%= msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <ul>
+    <li><a href="/inv/classification/add">Add New Classification</a></li>
+    <li><a href="/inv/inventory/add">Add New Inventory Item</a></li>
+  </ul>
+</main>
