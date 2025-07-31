@@ -50,10 +50,14 @@ invCont.buildDetailView = async function (req, res, next) {
 
 invCont.buildManagement = async function (req, res, next) {
   let nav = await utilities.getNav()
+
+  const classificationList = await utilities.buildClassificationList()
+
   res.render("inventory/management", {
     title: "Inventory Management",
     nav,
-    messages: req.flash(), // message flash
+    classificationList,
+    messages: req.flash(), 
   })
 }
 
@@ -138,7 +142,7 @@ invCont.addInventory = async function (req, res, next) {
   } = req.body
 
   const errors = validationResult(req)
-  const classificationList = await utilities.buildClassificationList(classification_id) // pasamos el seleccionado
+  const classificationList = await utilities.buildClassificationList(classification_id)
 
   if (!errors.isEmpty()) {
     return res.status(400).render("./inventory/add-inventory", {
@@ -190,6 +194,90 @@ invCont.addInventory = async function (req, res, next) {
     })
   }
 }
+
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+  try {
+    const classification_id = parseInt(req.params.classification_id)
+    const invData = await invModel.getInventoryByClassificationId(classification_id)
+
+    if (Array.isArray(invData) && invData.length > 0 && invData[0].inv_id) {
+      return res.json(invData)
+    } else {
+      // Devuelve un array vacío en lugar de lanzar error
+      return res.status(200).json([])  // El frontend debe manejar esto
+    }
+  } catch (error) {
+    console.error("Error fetching inventory JSON:", error)
+    return res.status(500).json({ message: "Error retrieving inventory data." })
+  }
+}
+
+
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+invCont.updateInventory = async function (req, res, next) {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+
+  try {
+  // Obtener datos actuales
+  const currentData = await invModel.getInventoryById(inv_id)
+
+  // Comparar si hay cambios
+  if (
+    currentData.inv_make === inv_make &&
+    currentData.inv_model === inv_model &&
+    currentData.inv_description === inv_description &&
+    currentData.inv_image === inv_image &&
+    currentData.inv_thumbnail === inv_thumbnail &&
+    Number(currentData.inv_price) === Number(inv_price) &&
+    Number(currentData.inv_year) === Number(inv_year) &&
+    Number(currentData.inv_miles) === Number(inv_miles) &&
+    currentData.inv_color === inv_color &&
+    Number(currentData.classification_id) === Number(classification_id)
+  ) {
+    req.flash("notice", `No changes detected. The item was not updated.`)
+    return res.redirect("/inv/")
+  }
+
+  // Si hay cambios, hacer update
+  const updateResult = await invModel.updateInventory(
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id
+  )
+
+  // ... resto del código
+} catch (error) {
+  console.error("Error updating inventory:", error)
+  next(error)
+}
+}
+
 
 
 module.exports = invCont

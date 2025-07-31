@@ -1,0 +1,23 @@
+<%- include("../partials/head") %>
+<main>
+  <h1>Account Management</h1>
+
+  <% if (messages.notice) { %>
+    <div class="notice"><%= messages.notice %></div>
+  <% } %>
+
+  <% if (errors) { %>
+    <ul class="errors">
+      <% errors.forEach(function(error) { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <% if (accountData) { %>
+    <p>Welcome, <%= accountData.account_firstname %> <%= accountData.account_lastname %>!</p>
+  <% } else { %>
+    <p>You're logged in.</p>
+  <% } %>
+
+</main>

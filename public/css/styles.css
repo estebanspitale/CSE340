@@ -602,6 +602,107 @@ button[type="submit"] {
   margin-top: 1rem;
 }
 
+#inventoryDisplay {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+
+#inventoryDisplay th, #inventoryDisplay td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+#inventoryDisplay th {
+  background-color: #f4f4f4;
+}
+
+#inventoryDisplay tr:hover {
+  background-color: #e9e9e9;
+}
+
+/************* Edit Inventory *************/
+
+.edit-inventory-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.edit-inventory-page h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.edit-inventory-page form {
+  display: grid;
+  gap: 1rem;
+}
+
+.edit-inventory-page label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.edit-inventory-page input,
+.edit-inventory-page textarea,
+.edit-inventory-page select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.edit-inventory-page textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.edit-inventory-page button {
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.edit-inventory-page button:hover {
+  background-color: #0056b3;
+}
+
+.edit-inventory-page .form-errors {
+  background-color: #ffe6e6;
+  color: #cc0000;
+  padding: 1rem;
+  border: 1px solid #cc0000;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.edit-inventory-page .form-errors ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.edit-inventory-page .notice {
+  background-color: #e6f7ff;
+  color: #007acc;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #007acc;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
 
 @media (max-width: 600px) {
   .add-inventory-page form {

@@ -1,5 +1,6 @@
-const invModel = require("../models/inventory-model")
 const Util = {}
+const invModel = require("../models/inventory-model")
+const jwt = require("jsonwebtoken")
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -26,24 +27,24 @@ Util.getNav = async function (req, res, next) {
 
 /* **************************************
 * Build the classification view HTML
-* ************************************ */
-Util.buildClassificationGrid = async function(data){
+************************************** */
+Util.buildClassificationGrid = async function (data) {
   let grid
-  if(data.length > 0){
+  if (data.length > 0) {
     grid = '<div class="inv-grid">'
-    data.forEach(vehicle => { 
+    data.forEach(vehicle => {
       grid += `
-      <div class="inv-card">
-        <a href="/inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
-          <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors">
-        </a>
-        <p class="vehicle-name">${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</p>
-        <span>$${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</span>
-      </div>
+        <div class="inv-card">
+          <a href="/inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">
+            <img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors">
+          </a>
+          <p class="vehicle-name">${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</p>
+          <span>$${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</span>
+        </div>
       `
     })
     grid += '</div>'
-  } else { 
+  } else {
     grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
@@ -51,8 +52,6 @@ Util.buildClassificationGrid = async function(data){
 
 /* ****************************************
  * Middleware For Handling Errors
- * Wrap other function in this for 
- * General Error Handling
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
@@ -98,5 +97,46 @@ Util.buildClassificationList = async function (classification_id = null) {
   return classificationList
 }
 
+/* ****************************************
+ * Middleware to check if user is logged in
+ **************************************** */
+Util.checkLogin = (req, res, next) => {
+  const token = req.cookies.jwt
+  if (!token) {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    req.accountData = decoded
+    res.locals.loggedin = true
+    next()
+  } catch (error) {
+    req.flash("notice", "Session expired. Please log in again.")
+    return res.redirect("/account/login")
+  }
+}
+
+/* ****************************************
+ * Middleware to store accountData in res.locals
+ * so it's usable in EJS views
+ **************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  const token = req.cookies.jwt
+  if (token) {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        res.locals.accountData = null
+        return next()
+      }
+      res.locals.accountData = decoded
+      return next()
+    })
+  } else {
+    res.locals.accountData = null
+    return next()
+  }
+}
 
 module.exports = Util

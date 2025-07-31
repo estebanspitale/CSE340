@@ -14,4 +14,22 @@
     <li><a href="/inv/classification/add">Add New Classification</a></li>
     <li><a href="/inv/inventory/add">Add New Inventory Item</a></li>
   </ul>
+
+  <!-- Paso 1: Agregamos el heading -->
+  <h2>Manage Inventory</h2>
+
+  <!-- Paso 2: Párrafo explicativo -->
+  <p>Select a classification from the list to see the items belonging to the classification.</p>
+
+  <!-- Paso 3: Mostrar el select de clasificación -->
+  <%- classificationList %>
+
+  <!-- Paso 4: Tabla vacía donde se inyectará el inventario -->
+  <table id="inventoryDisplay"></table>
+
+  <!-- Paso 5: Mensaje si JS está deshabilitado -->
+  <noscript>JavaScript must be enabled to use this page.</noscript>
+
 </main>
+
+<script src="../../js/inventory.js"></script>

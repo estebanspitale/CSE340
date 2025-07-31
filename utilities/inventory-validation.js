@@ -1,7 +1,7 @@
 const { body, validationResult } = require("express-validator")
 const validate = {}
 
-// Rules for adding a new vehicle
+// Rules for adding or updating a vehicle
 validate.inventoryRules = () => {
   return [
     body("inv_make")
@@ -43,7 +43,7 @@ validate.inventoryRules = () => {
   ]
 }
 
-// Check for errors and return
+// Check for errors and return (Add Inventory)
 validate.checkInventoryData = async (req, res, next) => {
   const { 
     inv_make, inv_model, inv_year, inv_description,
@@ -71,7 +71,45 @@ validate.checkInventoryData = async (req, res, next) => {
       inv_price,
       inv_miles,
       inv_color,
-      classification_id, // ← faltaba este
+      classification_id,
+    })
+  }
+
+  next()
+}
+
+/* **********************************
+ * Check data and return errors for Edit Inventory
+ * ********************************* */
+validate.checkUpdateData = async (req, res, next) => {
+  const { 
+    inv_id, classification_id, inv_make, inv_model, inv_year, 
+    inv_description, inv_image, inv_thumbnail, inv_price, 
+    inv_miles, inv_color 
+  } = req.body
+
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    const utilities = require("./index")
+    let nav = await utilities.getNav()
+    let classificationList = await utilities.buildClassificationList(classification_id)
+
+    return res.status(400).render("inventory/edit-inventory", {
+      title: `Edit ${inv_make} ${inv_model}`,
+      nav,
+      errors: errors.array(),
+      classificationList,
+      inv_id,
+      classification_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color
     })
   }
 

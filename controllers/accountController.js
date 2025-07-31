@@ -1,6 +1,8 @@
 const utilities = require("../utilities")
 const accountModel = require("../models/account-model")
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 async function buildLogin(req, res, next) {
   let nav = await utilities.getNav()
@@ -59,41 +61,80 @@ async function registerAccount(req, res) {
   }
 }
 
+/* ****************************************
+ *  Process login request
+ * ************************************ */
 async function accountLogin(req, res) {
-  const { account_email, account_password } = req.body
   let nav = await utilities.getNav()
-
+  const { account_email, account_password } = req.body
   const accountData = await accountModel.getAccountByEmail(account_email)
+
+  // Si no se encuentra el usuario
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.")
-    res.status(400).render("account/login", {
+    return res.status(400).render("account/login", {
       title: "Login",
       nav,
       errors: null,
       account_email,
     })
-    return
   }
 
-  // Compare hashed password
-  const match = await bcrypt.compare(account_password, accountData.account_password)
-if (match) {
-  req.flash("notice", `Welcome back, ${accountData.account_firstname}.`)
-  res.redirect("/")
-} else {
-  req.flash("notice", "Incorrect password. Please try again.")
-  res.status(400).render("account/login", {
-    title: "Login",
+  try {
+    // Comparar la contraseña con la hasheada
+    const match = await bcrypt.compare(account_password, accountData.account_password)
+    if (match) {
+      // No enviar la contraseña al cliente
+      delete accountData.account_password
+
+      // Generar el token
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+
+      // Guardar token como cookie segura si estamos en producción
+      res.cookie("jwt", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 3600 * 1000
+      })
+
+      console.log("JWT cookie set:", accessToken)
+
+      // Redirigir al dashboard
+      return res.redirect("/account/")
+    } else {
+      req.flash("notice", "Please check your credentials and try again.")
+      return res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+      })
+    }
+  } catch (error) {
+    console.error("Login error:", error)
+    throw new Error('Access Forbidden')
+  }
+}
+
+
+/* ****************************************
+ *  Deliver Account Management View
+ * ************************************ */
+async function buildAccountManagement(req, res) {
+  let nav = await utilities.getNav()
+  res.render("account/account", {
+    title: "Account Management",
     nav,
     errors: null,
-    account_email,
+    messages: req.flash(),
+    accountData: res.locals.accountData
   })
-}
 }
 
 module.exports = {
   buildLogin,
   buildRegister,
   registerAccount,
-  accountLogin, 
+  accountLogin,
+  buildAccountManagement,
 }
