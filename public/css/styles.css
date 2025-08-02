@@ -718,6 +718,103 @@ button[type="submit"] {
   }
 }
 
+/************* Account Update *************/
+
+.account-update {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.account-update h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.account-update section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #007bff;
+}
+
+.account-update form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.account-update label {
+  font-weight: 600;
+  color: #444;
+}
+
+.account-update input[type="text"],
+.account-update input[type="email"],
+.account-update input[type="password"] {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.account-update input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}
+
+.account-update button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.account-update button:hover:enabled {
+  background-color: #0056b3;
+}
+
+.account-update button:disabled {
+  background-color: #a9a9a9;
+  cursor: not-allowed;
+}
+
+.account-update .notice,
+.account-update .error {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.account-update .notice {
+  background-color: #e0ffe0;
+  border: 1px solid #90ee90;
+  color: #006600;
+}
+
+.account-update .error {
+  background-color: #ffe0e0;
+  border: 1px solid #ff9999;
+  color: #b30000;
+}
+
+.account-update p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
 
 /******* Media Queries ***************/
 

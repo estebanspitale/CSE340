@@ -64,7 +64,7 @@ app.use(express.static(path.join(__dirname, "public")))
  * Routes
  *************************/
 
-// ✅ Middleware que verifica si hay JWT y carga accountData
+// Middleware que verifica si hay JWT y carga accountData
 app.use(utilities.checkJWTToken)
 
 app.use((req, res, next) => {
