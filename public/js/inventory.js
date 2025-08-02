@@ -5,12 +5,12 @@ let classificationList = document.querySelector("#classificationList")
 
 // Esperamos a que el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
-  // Escuchamos el evento 'change' (cuando cambia la opción seleccionada)
+  // Evento 'change' (cuando cambia la opción seleccionada)
   classificationList.addEventListener("change", function () {
     let classification_id = classificationList.value
     console.log(`classification_id is: ${classification_id}`)
 
-    // Preparamos la URL para hacer la petición fetch
+    // URL para hacer la petición fetch
     let classIdURL = "/inv/getInventory/" + classification_id
 
     fetch(classIdURL)

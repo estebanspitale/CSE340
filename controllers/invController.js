@@ -207,7 +207,7 @@ invCont.getInventoryJSON = async (req, res, next) => {
       return res.json(invData)
     } else {
       // Devuelve un array vacío en lugar de lanzar error
-      return res.status(200).json([])  // El frontend debe manejar esto
+      return res.status(200).json([])
     }
   } catch (error) {
     console.error("Error fetching inventory JSON:", error)
@@ -267,10 +267,10 @@ invCont.updateInventory = async function (req, res, next) {
   } = req.body
 
   try {
-  // Obtener datos actuales
+  // Obtiene datos actuales
   const currentData = await invModel.getInventoryById(inv_id)
 
-  // Comparar si hay cambios
+  // Compara si hay cambios
   if (
     currentData.inv_make === inv_make &&
     currentData.inv_model === inv_model &&
@@ -287,7 +287,7 @@ invCont.updateInventory = async function (req, res, next) {
     return res.redirect("/inv/")
   }
 
-  // Si hay cambios, hacer update
+  // Si hay cambios, hace update
   const updateResult = await invModel.updateInventory(
     inv_id,
     inv_make,
@@ -302,7 +302,6 @@ invCont.updateInventory = async function (req, res, next) {
     classification_id
   )
 
-  // ... resto del código
 } catch (error) {
   console.error("Error updating inventory:", error)
   next(error)

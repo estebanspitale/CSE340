@@ -120,7 +120,6 @@ Util.checkLogin = (req, res, next) => {
 
 /* ****************************************
  * Middleware to store accountData in res.locals
- * so it's usable in EJS views
  **************************************** */
 Util.checkJWTToken = (req, res, next) => {
   const token = req.cookies.jwt

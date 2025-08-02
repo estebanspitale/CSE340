@@ -81,16 +81,16 @@ async function accountLogin(req, res) {
   }
 
   try {
-    // Comparar la contraseña con la hasheada
+    // Compara la contraseña con la hasheada
     const match = await bcrypt.compare(account_password, accountData.account_password)
     if (match) {
       // No enviar la contraseña al cliente
       delete accountData.account_password
 
-      // Generar el token
+      // Genera el token
       const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
 
-      // Guardar token como cookie segura si estamos en producción
+      // Guarda token como cookie segura si estamos en producción
       res.cookie("jwt", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -99,7 +99,7 @@ async function accountLogin(req, res) {
 
       console.log("JWT cookie set:", accessToken)
 
-      // Redirigir al dashboard
+      // Redirige al dashboard
       return res.redirect("/account/")
     } else {
       req.flash("notice", "Please check your credentials and try again.")
@@ -131,7 +131,7 @@ async function buildAccountManagement(req, res) {
   })
 }
 
-// Mostrar formulario para actualizar cuenta
+// Muestra formulario para actualizar cuenta
 async function buildUpdateAccount(req, res) {
   let nav = await utilities.getNav()
   const account_id = req.params.account_id
@@ -154,7 +154,7 @@ async function buildUpdateAccount(req, res) {
   }
 }
 
-// Procesar actualización de cuenta
+// Procesa actualización de cuenta
 async function updateAccount(req, res) {
   let nav = await utilities.getNav()
   const { account_id, account_firstname, account_lastname, account_email } = req.body
@@ -184,7 +184,7 @@ async function updateAccount(req, res) {
   }
 }
 
-// Procesar cambio de contraseña
+// Procesa cambio de contraseña
 async function updatePassword(req, res) {
   let nav = await utilities.getNav()
   const { account_id, account_password } = req.body

@@ -78,9 +78,9 @@ validate.checkInventoryData = async (req, res, next) => {
   next()
 }
 
-/* **********************************
- * Check data and return errors for Edit Inventory
- * ********************************* */
+
+//Check data and return errors for Edit Inventory
+
 validate.checkUpdateData = async (req, res, next) => {
   const { 
     inv_id, classification_id, inv_make, inv_model, inv_year, 
