@@ -111,4 +111,81 @@ validate.checkLoginData = async (req, res, next) => {
   next()
 }
 
+validate.updateRules = () => {
+  return [
+    body("account_firstname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("First name is required."),
+    body("account_lastname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Last name is required."),
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email is required.")
+      .custom(async (account_email, { req }) => {
+        const accountId = req.body.account_id;
+        const emailExists = await accountModel.checkExistingEmail(account_email);
+        // Si el email existe y no es del usuario actual
+        if (emailExists) {
+          const accountWithEmail = await accountModel.getAccountByEmail(account_email);
+          if (accountWithEmail.account_id != accountId) {
+            throw new Error("Email already in use by another account.");
+          }
+        }
+      }),
+  ];
+};
+
+validate.checkUpdateData = async (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.status(400).render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors: errors.array(),
+      accountData: req.body,
+    })
+    return
+  }
+  next()
+}
+
+validate.updatePasswordRules = () => {
+  return [
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password must be at least 12 characters and contain a mix of uppercase, lowercase, number, and symbol.")
+  ]
+}
+
+validate.checkPasswordData = async (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.status(400).render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors: errors.array(),
+      accountData: req.body,
+    })
+    return
+  }
+  next()
+}
+
 module.exports = validate

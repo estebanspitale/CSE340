@@ -34,7 +34,7 @@ async function getInventoryById(inv_id) {
       WHERE inv_id = $1
     `
     const data = await pool.query(sql, [inv_id])
-    return data.rows[0] // retorna solo 1 objeto
+    return data.rows[0] // devuelve solo 1 objeto
   } catch (error) {
     console.error("getInventoryById error: ", error)
     throw error
@@ -124,6 +124,20 @@ async function updateInventory(
   }
 }
 
+/* ***************************
+ *  Delete Inventory Item
+ * ************************** */
+async function deleteInventory(inv_id) {
+  try {
+    const sql = "DELETE FROM inventory WHERE inv_id = $1"
+    const data = await pool.query(sql, [inv_id])
+    return data.rowCount //  1 si ok, 0 si falló
+  } catch (error) {
+    console.error("Delete Inventory Error", error)
+    return null
+  }
+}
+
 
 module.exports = {
   getClassifications,
@@ -132,4 +146,5 @@ module.exports = {
   addClassification,
   addInventory,
   updateInventory,
+  deleteInventory,
 }

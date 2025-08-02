@@ -1,0 +1,31 @@
+<%- include("../partials/head") %>
+
+<div class="delete-inventory-page">
+  <main>
+    <h1>Delete <%= inv_make %> <%= inv_model %></h1>
+    <p>Confirm Deletion - This action is permanent and cannot be undone.</p>
+
+    <% if (message) { %>
+      <p class="notice"><%= message %></p>
+    <% } %>
+
+    <form action="/inv/delete" method="post">
+      <label for="inv_make">Make</label>
+      <input type="text" id="inv_make" name="inv_make" readonly value="<%= inv_make %>">
+
+      <label for="inv_model">Model</label>
+      <input type="text" id="inv_model" name="inv_model" readonly value="<%= inv_model %>">
+
+      <label for="inv_year">Year</label>
+      <input type="number" id="inv_year" name="inv_year" readonly value="<%= inv_year %>">
+
+      <label for="inv_price">Price</label>
+      <input type="text" id="inv_price" name="inv_price" readonly value="$<%= inv_price %>">
+
+      <!-- Campo oculto con el ID del vehículo -->
+      <input type="hidden" name="inv_id" value="<%= locals.inv_id %>">
+
+      <button type="submit">Delete Vehicle</button>
+    </form>
+  </main>
+</div>

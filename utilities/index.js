@@ -127,16 +127,45 @@ Util.checkJWTToken = (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
+        req.session.loggedin = false
+        req.session.accountData = null
+        res.locals.loggedin = false
         res.locals.accountData = null
         return next()
       }
+      req.session.loggedin = true
+      req.session.accountData = decoded
+      res.locals.loggedin = true
       res.locals.accountData = decoded
       return next()
     })
   } else {
+    req.session.loggedin = false
+    req.session.accountData = null
+    res.locals.loggedin = false
     res.locals.accountData = null
     return next()
   }
 }
+
+Util.checkAccountType = (req, res, next) => {
+  const accountData = res.locals.accountData
+
+  if (!accountData) {
+    // No está logueado
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+
+  const allowedTypes = ["Employee", "Admin"]
+
+  if (allowedTypes.includes(accountData.account_type)) {
+    return next()
+  } else {
+    req.flash("notice", "You do not have permission to access that area.")
+    return res.redirect("/account/login")
+  }
+}
+
 
 module.exports = Util

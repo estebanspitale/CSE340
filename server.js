@@ -67,6 +67,12 @@ app.use(express.static(path.join(__dirname, "public")))
 // ✅ Middleware que verifica si hay JWT y carga accountData
 app.use(utilities.checkJWTToken)
 
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session.loggedin
+  res.locals.accountData = req.session.accountData
+  next()
+})
+
 app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/inv", inventoryRoute)

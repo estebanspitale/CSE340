@@ -131,10 +131,94 @@ async function buildAccountManagement(req, res) {
   })
 }
 
+// Mostrar formulario para actualizar cuenta
+async function buildUpdateAccount(req, res) {
+  let nav = await utilities.getNav()
+  const account_id = req.params.account_id
+
+  try {
+    const accountData = await accountModel.getAccountById(account_id)
+    if (!accountData) {
+      req.flash("error", "Account not found.")
+      return res.redirect("/account/")
+    }
+
+    res.render("account/update-account", {
+      title: "Update Account",
+      nav,
+      errors: null,
+      accountData,
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+// Procesar actualización de cuenta
+async function updateAccount(req, res) {
+  let nav = await utilities.getNav()
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+
+  try {
+    const updateResult = await accountModel.updateAccount(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    )
+
+    if (updateResult) {
+      req.flash("notice", "Account successfully updated.")
+      return res.redirect("/account/")
+    } else {
+      req.flash("error", "Update failed.")
+      return res.status(501).render("account/update-account", {
+        title: "Update Account",
+        nav,
+        errors: null,
+        accountData: req.body,
+      })
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+// Procesar cambio de contraseña
+async function updatePassword(req, res) {
+  let nav = await utilities.getNav()
+  const { account_id, account_password } = req.body
+
+  try {
+    const hashedPassword = await bcrypt.hash(account_password, 10)
+
+    const result = await accountModel.updatePassword(account_id, hashedPassword)
+
+    if (result) {
+      req.flash("notice", "Password updated successfully.")
+      return res.redirect("/account/")
+    } else {
+      req.flash("error", "Password update failed.")
+      const accountData = await accountModel.getAccountById(account_id)
+      return res.status(501).render("account/update-account", {
+        title: "Update Account",
+        nav,
+        errors: null,
+        accountData,
+      })
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
 module.exports = {
   buildLogin,
   buildRegister,
   registerAccount,
   accountLogin,
   buildAccountManagement,
+  buildUpdateAccount,
+  updateAccount,
+  updatePassword,
 }

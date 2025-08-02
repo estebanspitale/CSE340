@@ -215,6 +215,37 @@ invCont.getInventoryJSON = async (req, res, next) => {
   }
 }
 
+invCont.buildEditInventoryView = async function (req, res, next) {
+  try {
+    const invId = req.params.invId
+    const data = await invModel.getInventoryById(invId)
+    const nav = await utilities.getNav()
+    const classificationList = await utilities.buildClassificationList(data.classification_id)
+
+    res.render("inventory/edit-inventory", {
+      title: `Edit ${data.inv_make} ${data.inv_model}`,
+      nav,
+      classificationList,
+      errors: null,
+      message: null,
+      inv_id: data.inv_id,
+      inv_make: data.inv_make,
+      inv_model: data.inv_model,
+      inv_year: data.inv_year,
+      inv_description: data.inv_description,
+      inv_image: data.inv_image,
+      inv_thumbnail: data.inv_thumbnail,
+      inv_price: data.inv_price,
+      inv_miles: data.inv_miles,
+      inv_color: data.inv_color,
+      classification_id: data.classification_id,
+    })
+  } catch (error) {
+    console.error("Error building edit inventory view:", error)
+    next(error)
+  }
+}
+
 
 /* ***************************
  *  Update Inventory Data
@@ -278,6 +309,79 @@ invCont.updateInventory = async function (req, res, next) {
 }
 }
 
+/* ***************************
+ *  Build delete confirmation view
+ * ************************** */
+invCont.buildDeleteView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.invId)
+  try {
+    const nav = await utilities.getNav()
+    const itemData = await invModel.getInventoryById(inv_id)
+    const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+
+    res.render("./inventory/delete-confirm", {
+      title: "Delete " + itemName,
+      nav,
+      errors: null,
+      message: null,
+      inv_id: itemData.inv_id,
+      inv_make: itemData.inv_make,
+      inv_model: itemData.inv_model,
+      inv_year: itemData.inv_year,
+      inv_price: itemData.inv_price,
+    })
+  } catch (error) {
+    console.error("Error building delete confirmation view:", error)
+    next(error)
+  }
+}
+
+/* ***************************
+ *  Process deletion of inventory item
+ * ************************** */
+invCont.deleteInventoryItem = async function (req, res, next) {
+  const inv_id = parseInt(req.body.inv_id)
+  let nav = await utilities.getNav()
+
+  try {
+    const deleteResult = await invModel.deleteInventory(inv_id)
+
+    if (deleteResult) {
+      req.flash("notice", "The inventory item was successfully deleted.")
+      return res.redirect("/inv")
+    } else {
+      req.flash("notice", "Sorry, the delete failed.")
+      return res.redirect(`/inv/delete/${inv_id}`)
+    }
+  } catch (error) {
+    console.error("Error deleting inventory item:", error)
+    req.flash("notice", "An unexpected error occurred.")
+    return res.redirect(`/inv/delete/${inv_id}`)
+  }
+}
+
+
+/* ***************************
+ *  Process deletion of inventory item
+ * ************************** */
+invCont.deleteInventoryItem = async function (req, res, next) {
+  const inv_id = parseInt(req.body.inv_id)
+  try {
+    const deleteResult = await invModel.deleteInventory(inv_id)
+    const nav = await utilities.getNav()
+
+    if (deleteResult) {
+      req.flash("notice", "The inventory item was successfully deleted.")
+    } else {
+      req.flash("notice", "Sorry, the delete failed.")
+    }
+
+    res.redirect("/inv")
+  } catch (error) {
+    console.error("Error deleting inventory item:", error)
+    next(error)
+  }
+}
 
 
 module.exports = invCont

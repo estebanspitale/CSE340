@@ -1,25 +1,34 @@
-// Needed Resources 
 const express = require("express")
-const router = new express.Router() 
+const router = new express.Router()
 const invController = require("../controllers/invController")
 const utilities = require("../utilities/")
 const { body } = require("express-validator")
 const invValidate = require("../utilities/inventory-validation")
 
-// Route to build inventory by classification view
-router.get("/type/:classificationId", invController.buildByClassificationId);
+// Rutas públicas (sin protección)
+router.get("/type/:classificationId", invController.buildByClassificationId)
+router.get("/detail/:invId", invController.buildDetailView)
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
-// Route to build inventory detail view
-router.get("/detail/:invId", invController.buildDetailView);
+// Rutas administrativas (protegidas con checkJWTToken y checkAccountType)
+router.get(
+  "/",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildManagement)
+)
 
-// Route to inventory management view
-router.get("/", utilities.handleErrors(invController.buildManagement))
-
-// View form for add classification
-router.get("/classification/add", utilities.handleErrors(invController.buildAddClassificationView))
+router.get(
+  "/classification/add",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildAddClassificationView)
+)
 
 router.post(
   "/classification/add",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
   body("classification_name")
     .trim()
     .matches(/^[A-Za-z0-9]+$/)
@@ -29,34 +38,50 @@ router.post(
   utilities.handleErrors(invController.addClassification)
 )
 
-// Mostrar formulario
-router.get("/inventory/add", utilities.handleErrors(invController.buildAddInventory))
+router.get(
+  "/inventory/add",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildAddInventory)
+)
 
-// Procesar formulario con validación
 router.post(
   "/inventory/add",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
   invValidate.inventoryRules(),
   invValidate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 )
 
 router.get(
-  "/getInventory/:classification_id",
-  utilities.handleErrors(invController.getInventoryJSON)
-);
-
-// Route to build edit inventory view by inv_id
-router.get(
   "/edit/:invId",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
   utilities.handleErrors(invController.buildEditInventoryView)
 )
 
-// Route to process inventory update
 router.post(
   "/update",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
   invValidate.inventoryRules(),
   invValidate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
 )
 
-module.exports = router;
+router.get(
+  "/delete/:invId",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.buildDeleteView)
+)
+
+router.post(
+  "/delete",
+  utilities.checkJWTToken,
+  utilities.checkAccountType,
+  utilities.handleErrors(invController.deleteInventoryItem)
+)
+
+module.exports = router
