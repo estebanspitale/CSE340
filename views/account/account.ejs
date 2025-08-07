@@ -1,5 +1,5 @@
 <%- include("../partials/head") %>
-<main>
+<main class="account-management">
   <h1>Account Management</h1>
 
   <% if (messages.notice) { %>
@@ -21,7 +21,7 @@
 
     <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
       <h3>Inventory Management</h3>
-      <p><a href="/inv/">Go to Inventory Management</a></p>
+      <a href="/inv/">Go to Inventory Management</a>
     <% } %>
 
   <% } else { %>

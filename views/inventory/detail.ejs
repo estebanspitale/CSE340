@@ -1,7 +1,57 @@
 <% if (title) { %>
   <h1><%= title %></h1>
+    <%= messages() %>
+    <% if (messages.notice) { %>
+    <div class="notice"><%= messages.notice %></div>
+  <% } %>
+
+  <% if (messages.error) { %>
+    <div class="error"><%= messages.error %></div>
+  <% } %>
 <% } else {
   res.redirect('/')
 } %>
 
 <%- vehicleView %>
+
+<!-- Sección de reseñas -->
+<section class="reviews">
+  <h2>Reseñas</h2>
+
+  <% if (reviews && reviews.length > 0) { %>
+    <% reviews.forEach(r => { %>
+      <div class="review">
+        <p><strong><%= r.account_firstname %> <%= r.account_lastname %></strong> - <%= r.review_rating %>/5</p>
+        <p><%= r.review_text %></p>
+        <small><%= new Date(r.review_date).toLocaleDateString() %></small>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>Aún no hay reseñas para este vehículo.</p>
+  <% } %>
+</section>
+
+<!-- Formulario de reseña para usuarios logueados -->
+<% if (loggedin) { %>
+  <section class="review-form">
+    <h3>Escribe tu reseña</h3>
+    <form action="/reviews/add" method="POST">
+      <input type="hidden" name="inv_id" value="<%= req.params.invId %>">
+
+      <label for="review_rating">Calificación:</label>
+      <select name="review_rating" id="review_rating" required>
+        <% for (let i = 5; i >= 1; i--) { %>
+          <option value="<%= i %>"><%= i %></option>
+        <% } %>
+      </select>
+
+      <label for="review_text">Tu reseña:</label>
+      <textarea name="review_text" id="review_text" required></textarea>
+
+      <button type="submit">Enviar reseña</button>
+    </form>
+  </section>
+<% } else { %>
+  <p><a href="/account/login">Inicia sesión</a> para dejar una reseña.</p>
+<% } %>
+

@@ -1,7 +1,7 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
 const { validationResult } = require("express-validator")
-
+const reviewModel = require("../models/review-model");
 
 const invCont = {}
 
@@ -31,20 +31,26 @@ invCont.buildByClassificationId = async function (req, res, next) {
 }
 
 invCont.buildDetailView = async function (req, res, next) {
-  const inv_id = req.params.invId
+  const inv_id = req.params.invId;
+
   try {
-    const data = await invModel.getInventoryById(inv_id)
-    const nav = await utilities.getNav()
-    const vehicleView = utilities.buildDetailView(data)
+    const data = await invModel.getInventoryById(inv_id);
+    const nav = await utilities.getNav();
+    const vehicleView = utilities.buildDetailView(data);
+
+    const reviews = await reviewModel.getReviewsByInvId(inv_id);
 
     res.render("./inventory/detail", {
       title: `${data.inv_make} ${data.inv_model}`,
       nav,
-      vehicleView
-    })
+      vehicleView,
+      reviews,
+      req
+    });
+
   } catch (error) {
-    console.error("Error en buildDetailView", error)
-    next(error)
+    console.error("Error en buildDetailView", error);
+    next(error);
   }
 }
 
